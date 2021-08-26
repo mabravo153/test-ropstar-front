@@ -2,7 +2,9 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 
 const Restaurantes = ({ restaurantesData }) => {
-  if (restaurantesData.msg.length === null) return null;
+  if (restaurantesData.msg) {
+    if (restaurantesData.msg.length === 0) return null;
+  }
 
   const buscarRestaurante = (e) => {
     console.log(e.target.value);
@@ -34,30 +36,36 @@ const Restaurantes = ({ restaurantesData }) => {
               Crear Restaurante
             </Link>
           </div>
-
           <div className="col-md-8 mx-auto">
             <div className="list-group">
-              {restaurantesData.msg.map((restaurante) => (
-                <a
-                  key={restaurante.id}
-                  className="p-5 list-group-item list-group-item-action flex-column align-items-start"
-                >
-                  <div className="d-flex w-100 justify-content-between mb-4">
-                    <h3 className="mb-3"> {restaurante.name} </h3>
-                    <small className="fecha-alta">{restaurante.address}</small>
-                    <small className="fecha-alta">{restaurante.city}</small>
-                  </div>
-                  <div className="d-flex w-100 justify-content-between mb-4">
-                    <p className="mb-0">{restaurante.description}</p>
-                    <Link
-                      to={`/reservas/${restaurante.id}`}
-                      className="btn btn-success text-uppercase py-2 pz-5 font-weigth-bold"
-                    >
-                      Crear Resersacion
-                    </Link>
-                  </div>
-                </a>
-              ))}
+              {restaurantesData.msg ? (
+                restaurantesData.msg.map((restaurante) => (
+                  // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                  <a
+                    key={restaurante.id}
+                    className="p-5 list-group-item list-group-item-action flex-column align-items-start"
+                  >
+                    <div className="d-flex w-100 justify-content-between mb-4">
+                      <h3 className="mb-3"> {restaurante.name} </h3>
+                      <small className="fecha-alta">
+                        {restaurante.address}
+                      </small>
+                      <small className="fecha-alta">{restaurante.city}</small>
+                    </div>
+                    <div className="d-flex w-100 justify-content-between mb-4">
+                      <p className="mb-0">{restaurante.description}</p>
+                      <Link
+                        to={`/reservas/${restaurante.id}`}
+                        className="btn btn-success text-uppercase py-2 pz-5 font-weigth-bold"
+                      >
+                        Crear Resersacion
+                      </Link>
+                    </div>
+                  </a>
+                ))
+              ) : (
+                <h1>No hay Restaurantes </h1>
+              )}
             </div>
           </div>
         </div>
