@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const Restaurantes = ({ restaurantesData }) => {
   if (restaurantesData.msg) {
     if (restaurantesData.msg.length === 0) return null;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
   }
 
   const buscarRestaurante = (e) => {
@@ -23,7 +24,7 @@ const Restaurantes = ({ restaurantesData }) => {
                 className="form-control form-control-lg"
                 id="customer_name"
                 name="customer_name"
-                placeholder="Nombre del Comensal"
+                placeholder="Nombre del Restaurante"
                 onChange={buscarRestaurante}
               />
             </div>
