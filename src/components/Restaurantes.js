@@ -1,8 +1,15 @@
 /* eslint-disable array-callback-return */
 import React, { Fragment, useState } from "react";
+import clienteAxios from "../config/axios";
 import { Link } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
-const Restaurantes = ({ restaurantesData }) => {
+const Restaurantes = ({ restaurantesData, guardarConsultar }) => {
   const [buquedaUsuario, actualizarBusquedaUsuario] = useState(
     restaurantesData.msg
   );
@@ -32,6 +39,29 @@ const Restaurantes = ({ restaurantesData }) => {
     filtrarResultados(e.target.value);
   };
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const eliminarRestaurante = (e) => {
+    let element = e.target.getAttribute("datatype");
+    clienteAxios
+      .delete(`/api/v1/restaurants/${element}`)
+      .then((respuesta) => {
+        guardarConsultar(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        handleClickOpen();
+      });
+  };
+
   return (
     <Fragment>
       <h1 className="my-5">Administrador de Restaurantes</h1>
@@ -56,12 +86,18 @@ const Restaurantes = ({ restaurantesData }) => {
             ""
           )}
 
-          <div className="col-12 mb-5 d-flex justify-content-center">
+          <div className="col-12 mb-5 d-flex justify-content-around">
             <Link
               to={"/restaurante"}
               className="btn btn-success text-uppercase py-2 pz-5 font-weigth-bold"
             >
               Crear Restaurante
+            </Link>
+            <Link
+              to={"/reservas"}
+              className="btn btn-success text-uppercase py-2 pz-5 font-weigth-bold"
+            >
+              Listar Reservas
             </Link>
           </div>
 
@@ -83,12 +119,27 @@ const Restaurantes = ({ restaurantesData }) => {
                     </div>
                     <div className="d-flex w-100 justify-content-between mb-4">
                       <p className="mb-0">{restaurante.description}</p>
+                    </div>
+                    <div className="d-flex w-100 justify-content-between mb-4">
                       <Link
                         to={`/reservas/${restaurante.id}`}
                         className="btn btn-success text-uppercase py-2 pz-5 font-weigth-bold"
                       >
                         Crear Resersacion
                       </Link>
+                      <Link
+                        to={`/restaurante/${restaurante.id}`}
+                        className="btn btn-primary text-uppercase py-2 pz-5 font-weigth-bold"
+                      >
+                        Editar Restaurante
+                      </Link>
+                      <input
+                        type="submit"
+                        onClick={eliminarRestaurante}
+                        datatype={restaurante.id}
+                        className="btn btn-danger text-uppercase py-2 pz-5 font-weigth-bold"
+                        value="Eliminar Restaurante"
+                      />
                     </div>
                   </a>
                 ))
@@ -98,6 +149,28 @@ const Restaurantes = ({ restaurantesData }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Ah Ocurrido un Error"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Ah Ocurrido un error al Eliminar el Restaurante
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cerrar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </Fragment>
   );

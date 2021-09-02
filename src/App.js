@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import clienteAxios from "./config/axios";
 
+import CrearReservas from "./components/CrearReservas";
 import Reservas from "./components/Reservas";
 import Restaurantes from "./components/Restaurantes";
 import CrearRestaurante from "./components/CrearRestaurante";
+import EditarRestaurante from "./components/EditarRestaurante";
 
 function App() {
   const [restaurantesInfo, guardarRestaurantes] = useState([]);
@@ -34,7 +36,12 @@ function App() {
         <Route
           exact
           path="/"
-          component={() => <Restaurantes restaurantesData={restaurantesInfo} />}
+          component={() => (
+            <Restaurantes
+              restaurantesData={restaurantesInfo}
+              guardarConsultar={guardarConsultar}
+            />
+          )}
         />
         <Route
           exact
@@ -43,7 +50,15 @@ function App() {
             <CrearRestaurante guardarConsultar={guardarConsultar} />
           )}
         />
-        <Route exact path="/reservas/:id" component={Reservas} />
+        <Route
+          exact
+          path="/restaurante/:id"
+          component={() => (
+            <EditarRestaurante guardarConsultar={guardarConsultar} />
+          )}
+        />
+        <Route exact path="/reservas/:id" component={CrearReservas} />
+        <Route exact path="/reservas" component={Reservas} />
       </Switch>
     </Router>
   );
